@@ -1,0 +1,51 @@
+.headerMain {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: start;
+    flex-wrap: wrap;
+}
+
+.headerMain .headerMainGroup {
+    min-width: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    width: fit-content;
+    /*
+    border: 2px red solid;
+    */
+    gap: 1rem;
+}
+
+.headerStack{
+    align-items: flex-start;
+    flex: 1 1 300px;
+    max-width: 100%;
+    /*
+    border: 2px red solid;
+    */
+}
+
+.headerButton{
+    max-width: 600px;
+}
+
+@media screen and (max-width: 768px)  {
+    .headerMain{
+        justify-content: center;
+    }
+
+    .headerMain .headerMainGroup {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .headerStack{
+        align-items: center;
+    }
+
+    .headerButton{
+        max-width: none;
+    }
+
+}

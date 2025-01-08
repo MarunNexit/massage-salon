@@ -1,0 +1,27 @@
+button div {
+    display: block;
+    width:100%
+}
+
+button div a {
+    display: block;
+    width:100%
+}
+
+.dropdownButton{
+    border: none;
+    margin: 10px;
+}
+
+.dropdownButton:hover{
+    background-color: transparent;
+}
+
+.anchor{
+    margin: 10px 20px;
+    text-decoration: none;
+}
+
+.anchor:hover{
+    text-decoration: none;
+}

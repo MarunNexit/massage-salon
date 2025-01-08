@@ -1,0 +1,8 @@
+.drawerList{
+    cursor: pointer;
+    transition: filter 0.3s ease;
+}
+
+.drawerList:hover{
+    filter: brightness(85%);
+}

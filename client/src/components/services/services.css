@@ -1,0 +1,21 @@
+.services{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    .servicesDiv{
+        width: 80%;
+        padding: 16px;
+        border-radius: 8px;
+        margin-top: 2rem;
+        text-align: start;
+    }
+
+    .servicesDrawerDiv{
+        width: 100%;
+        padding: 8px;
+        border-radius: 8px;
+        text-align: start;
+    }
+}
