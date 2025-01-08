@@ -14,3 +14,11 @@ The project is organized into two main folders:
 To start the backend server, navigate to the `server` folder and run the following command:  
 ```bash
 npm run start:dev
+```
+
+### Running the Frontend
+To start the frontend development server, navigate to the client folder and run:
+
+```bash
+npm run dev
+```
