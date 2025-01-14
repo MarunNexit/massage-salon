@@ -6,11 +6,12 @@ import EnrollTeamItem from "./enrollTeamItem.tsx";
 
 interface EnrollTeamProps {
     service_id: string;
-    onSelect: (id: string) => void;
+    onSelect: (id: string, name: string) => void;
+    service_name: string | null;
 }
 
 
-const EnrollTeam: React.FC<EnrollTeamProps> = ({service_id, onSelect}) => {
+const EnrollTeam: React.FC<EnrollTeamProps> = ({service_id, onSelect, service_name}) => {
 
     const [team, setTeam] = useState<ITeamMember[]>([]);
 
@@ -39,6 +40,7 @@ const EnrollTeam: React.FC<EnrollTeamProps> = ({service_id, onSelect}) => {
                 marginTop: '1rem',
             }}
         >
+            <Text size="md" mb="md">{service_name}</Text>
             <Text size="md" mb="xl">
                 Виберіть майстра
             </Text>

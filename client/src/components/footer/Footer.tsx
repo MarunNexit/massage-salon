@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
 
                     <Grid.Col span={3} style={{display: 'flex', justifyContent: 'center'}}>
                         <section style={{display: 'flex', flexDirection: 'column'}}>
-                            <MainMenu fullVersion={true}></MainMenu>
+                            <MainMenu fullVersion={true} isFooter={true}></MainMenu>
                         </section>
                     </Grid.Col>
 

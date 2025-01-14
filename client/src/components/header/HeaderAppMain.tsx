@@ -62,7 +62,7 @@ const HeaderAppMain: React.FC = () => {
                 </Group>
 
                 <Group mt="md">
-                    <Button variant="outline" color={theme.colors.buttons[5]}>
+                    <Button variant="outline" style={{color: theme.colors.buttons[9]}}>
                         {salonData.phone}
                     </Button>
 

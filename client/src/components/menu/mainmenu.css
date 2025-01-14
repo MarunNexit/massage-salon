@@ -25,3 +25,8 @@ button div a {
 .anchor:hover{
     text-decoration: none;
 }
+
+.main-menu-column{
+    display: flex;
+    flex-direction: column;
+}

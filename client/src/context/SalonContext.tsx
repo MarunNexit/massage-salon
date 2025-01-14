@@ -1,11 +1,13 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import {getSalon, getSalonModified} from "../api/salon.ts"; // ваша функція для отримання даних
+import {getSalon, getSalonModified, updateSalon} from "../api/salon.ts"; // ваша функція для отримання даних
 import { ISalon } from "../models/salon.ts";
+import {showNotification} from "../components/notifications/notification.ts";
 
 interface SalonContextType {
     salonData: ISalon;
     loading: boolean;
     error: string | null;
+    updateSalonData: (updatedData: ISalon) => void;
 }
 
 const SalonContext = createContext<SalonContextType | undefined>(undefined);
@@ -40,12 +42,32 @@ export const SalonProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setLoading(false);
     };
 
+    const updateSalonData = async (updatedData: ISalon) => {
+        setLoading(true);
+        console.log(updatedData);
+        try {
+            await updateSalon(updatedData).then(() => {
+                    showNotification({
+                        title: 'Дані оновлено',
+                        color: 'green',
+                        autoClose: 5000,
+                    });
+            }
+            );
+/*
+            setSalonDataFromLocalStorage(updatedSalon);
+*/
+        } catch (err) {
+            setError('Error updating salon data');
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         console.log(salonData)
     }, [salonData]);
 
     useEffect(() => {
-
         const fetchSalonData = async () => {
             try {
                 const cachedData = getSalonDataFromLocalStorage();
@@ -85,7 +107,7 @@ export const SalonProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }, []);
 
     return (
-        <SalonContext.Provider value={{ salonData, loading, error }}>
+        <SalonContext.Provider value={{ salonData, loading, error, updateSalonData }}>
             {children}
         </SalonContext.Provider>
     );

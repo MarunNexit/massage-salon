@@ -49,10 +49,33 @@ export const getSalonModified = async (_req: Request, res: Response) => {
 
 export const updateSalon = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        const updatedSalon = await Salon.findByIdAndUpdate(id, req.body, { new: true });
-        res.status(200).json(updatedSalon);
+        const { name, phone, address, description, logo, closureReason } = req.body;
+
+        if (!name || !phone || !address || !description) {
+            res.status(400).json({ message: 'Необхідно надати всі обов\'язкові поля.' });
+        }
+        else {
+            const updatedSalonData = {
+                name,
+                phone,
+                address,
+                logo,
+                description,
+                closureReason,
+                updatedAt: new Date()
+            };
+
+            const updatedSalon = await Salon.findOneAndUpdate({}, updatedSalonData, { new: true });
+
+            if (!updatedSalon) {
+                res.status(404).json({ message: 'Салон не знайдено.' });
+            }
+            else {
+                res.status(200).json(updatedSalon);
+            }
+        }
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Помилка при оновленні інформації', error });
     }
 };

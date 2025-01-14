@@ -1,9 +1,10 @@
 import {Button, Group, Text, Box, Stack, Title, useMantineTheme} from '@mantine/core';
-import {IconPhone, IconMapPin, IconEdit} from '@tabler/icons-react';
+import {IconPhone, IconMapPin} from '@tabler/icons-react';
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store.ts";
 import SalonOpen from "../salonOpen/SalonOpen.tsx";
 import {useSalonContext} from "../../context/SalonContext.tsx";
+import EnrollButton from "../enroll/enrollButton.tsx";
 
 const Location = () => {
     const workingHours = useSelector((state: RootState) => state.workingHours);
@@ -23,6 +24,11 @@ const Location = () => {
         console.error(error);
         return null;
     }
+
+    const handleOpenGoogleMaps = () => {
+        const address = encodeURIComponent('Пасічна 12, Київ');
+        window.open(`https://www.google.com/maps?q=${address}`, '_blank');
+    };
 
     return (
         <Box
@@ -80,11 +86,8 @@ const Location = () => {
 
                 <Group style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '4rem' }}>
                     <Group style={{ display: 'flex', justifyContent: 'space-between', width: '80%' }}>
-                        <Button variant="outline" style={{width:'100%'}}>
-                            <IconEdit size={20} />
-                            Записатися
-                        </Button>
-                        <Button variant="outline" style={{width:'100%'}}>
+                        <EnrollButton outline={true} icon={true} fullWidth={true} full={false}></EnrollButton>
+                        <Button variant="outline" style={{width:'100%'}} onClick={handleOpenGoogleMaps}>
                             <IconMapPin size={20} />
                             Маршрут
                         </Button>

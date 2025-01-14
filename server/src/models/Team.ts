@@ -5,6 +5,7 @@ interface ITeamMember extends Document {
     position: string;
     image: string;
     services: mongoose.Types.ObjectId[];
+    workingDays: mongoose.Types.ObjectId[];
 }
 
 const TeamMemberSchema: Schema = new Schema({
@@ -12,6 +13,7 @@ const TeamMemberSchema: Schema = new Schema({
     position: { type: String, required: true },
     image: { type: String, required: true },
     services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
+    workingDays: [{ type: mongoose.Schema.Types.ObjectId, ref: 'WorkingHours' }],
 });
 
 export default mongoose.model<ITeamMember>('TeamMember', TeamMemberSchema);

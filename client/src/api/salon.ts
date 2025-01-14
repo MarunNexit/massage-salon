@@ -15,6 +15,18 @@ export const getSalon = async () => {
 };
 
 
+export const updateSalon = async (updatedSalonData: any) => {
+    try {
+        const response = await axios.put(`${API_URL}/salons`, updatedSalonData);
+        console.log('Salon updated successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating salon info:', error);
+        throw error;
+    }
+};
+
+
 export const getSalonModified = async (lastModified: string) => {
     try {
         return await axios.get(`${API_URL}/salons/modified`, {
@@ -41,16 +53,6 @@ export const createSalon = async (salonData: { name: string; description: string
         return response.data;
     } catch (error) {
         console.error('Error creating salon:', error);
-        throw error;
-    }
-};
-
-export const updateSalon = async (id: string, salonData: { name: string; description: string; address: string }) => {
-    try {
-        const response = await axios.put(`${API_URL}/salons/${id}`, salonData);
-        return response.data;
-    } catch (error) {
-        console.error('Error updating salon:', error);
         throw error;
     }
 };

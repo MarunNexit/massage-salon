@@ -6,9 +6,11 @@ import {scrollToElement} from "../../utils/scrollToElement.ts";
 
 interface MainMenuProps {
     fullVersion?: boolean;
+    isDrawer?: boolean;
+    isFooter?: boolean;
 }
 
-const MainMenu: React.FC<MainMenuProps> = ({ fullVersion = false }) => {
+const MainMenu: React.FC<MainMenuProps> = ({ fullVersion = false, isDrawer = false, isFooter = false }) => {
     const theme = useMantineTheme();
 
     enum MenuList {
@@ -54,38 +56,40 @@ const MainMenu: React.FC<MainMenuProps> = ({ fullVersion = false }) => {
 
     return (
         <>
-            {menuItems.map((item) => (
-                <React.Fragment key={item.id}>
-                    {renderAnchor(item.label, item.id)}
-                </React.Fragment>
-            ))}
-
-            {!fullVersion ? (
-                <Menu shadow="md" width={200} trigger="hover" openDelay={100} closeDelay={400}>
-                    <Menu.Target>
-                        <Button
-                            className={"dropdownButton"}
-                            style={{ color: theme.colors.text[9] }}
-                            variant={"outline"}
-                            size="sm"
-                        >
-                            Ще <IconChevronDown size={16} style={{ margin: "0 4px" }} />
-                        </Button>
-                    </Menu.Target>
-
-                    <Menu.Dropdown style={{ align: "center", zIndex: 9999 }}>
-                        {additionalMenuItems.map((item) => (
-                            <Menu.Item key={item.id}>{renderAnchor(item.label, item.id)}</Menu.Item>
-                        ))}
-                    </Menu.Dropdown>
-                </Menu>
-            ) : (
-                additionalMenuItems.map((item) => (
-                    <React.Fragment key={item.id}>
+            <section className={isDrawer || isFooter ? 'main-menu-column' : ''}>
+                {menuItems.map((item) => (
+                    <React.Fragment key={item.id} >
                         {renderAnchor(item.label, item.id)}
                     </React.Fragment>
-                ))
-            )}
+                ))}
+
+                {!fullVersion ? (
+                    <Menu shadow="md" width={200} trigger="hover" openDelay={100} closeDelay={400}>
+                        <Menu.Target>
+                            <Button
+                                className={"dropdownButton"}
+                                style={{ color: theme.colors.text[9] }}
+                                variant={"outline"}
+                                size="sm"
+                            >
+                                Ще <IconChevronDown size={16} style={{ margin: "0 4px" }} />
+                            </Button>
+                        </Menu.Target>
+
+                        <Menu.Dropdown style={{ align: "center", zIndex: 9999 }}>
+                            {additionalMenuItems.map((item) => (
+                                <Menu.Item key={item.id}>{renderAnchor(item.label, item.id)}</Menu.Item>
+                            ))}
+                        </Menu.Dropdown>
+                    </Menu>
+                ) : (
+                    additionalMenuItems.map((item) => (
+                        <React.Fragment key={item.id}>
+                            {renderAnchor(item.label, item.id)}
+                        </React.Fragment>
+                    ))
+                )}
+            </section>
         </>
     );
 };

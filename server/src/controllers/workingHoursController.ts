@@ -14,7 +14,6 @@ export const createWorkingHours = async (req: Request, res: Response) => {
 };
 */
 
-// Отримання робочих годин
 export const getWorkingHours = async (_req: Request, res: Response) => {
     try {
         const workingHours = await WorkingHours.findOne();
@@ -24,7 +23,6 @@ export const getWorkingHours = async (_req: Request, res: Response) => {
     }
 };
 
-// Оновлення робочих годин
 export const updateWorkingHours = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;

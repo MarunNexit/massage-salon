@@ -163,6 +163,39 @@ const seedData = async () => {
         await SocialLink.insertMany(socialLinkData);
         console.log('SocialLink data inserted');
 
+        const workingHoursData = [
+            {
+                day: 'Понеділок',
+                hours: '9:00 - 18:00',
+            },
+            {
+                day: 'Вівторок',
+                hours: '9:00 - 18:00',
+            },
+            {
+                day: 'Середа',
+                hours: '9:00 - 18:00',
+            },
+            {
+                day: 'Четвер',
+                hours: '9:00 - 18:00',
+            },
+            {
+                day: 'Пʼятниця',
+                hours: '9:00 - 18:00',
+            },
+            {
+                day: 'Субота',
+                hours: '10:00 - 16:00',
+            },
+            {
+                day: 'Неділя',
+                hours: 'Закрито',
+            },
+        ];
+        await WorkingHours.insertMany(workingHoursData);
+        console.log('WorkingHours data inserted');
+
         const teamData = [
             {
                 name: 'Марія Іванова',
@@ -206,41 +239,28 @@ const seedData = async () => {
             };
         });
 
-        await Team.insertMany(teamMembersWithServices);
-        console.log('TeamMember data inserted');
+        const workingHours = await WorkingHours.find();
+        const workingHoursIds = workingHours.slice(0, -1).map((workingHours) => workingHours._id);
 
-        const workingHoursData = [
-            {
-                day: 'Понеділок',
-                hours: '9:00 - 18:00',
-            },
-            {
-                day: 'Вівторок',
-                hours: '9:00 - 18:00',
-            },
-            {
-                day: 'Середа',
-                hours: '9:00 - 18:00',
-            },
-            {
-                day: 'Четвер',
-                hours: '9:00 - 18:00',
-            },
-            {
-                day: 'Пʼятниця',
-                hours: '9:00 - 18:00',
-            },
-            {
-                day: 'Субота',
-                hours: '10:00 - 16:00',
-            },
-            {
-                day: 'Неділя',
-                hours: 'Закрито',
-            },
-        ];
-        await WorkingHours.insertMany(workingHoursData);
-        console.log('WorkingHours data inserted');
+        const teamMembersWithWorkingDays = teamMembersWithServices.map((member) => {
+            const randomWorkingDays: string[] = [];
+
+            while (randomWorkingDays.length < 4) {
+                const randomWorkingDay = workingHoursIds[Math.floor(Math.random() * workingHoursIds.length)] as string;
+
+                if (!randomWorkingDays.includes(randomWorkingDay)) {
+                    randomWorkingDays.push(randomWorkingDay);
+                }
+            }
+
+            return {
+                ...member,
+                workingDays: randomWorkingDays,
+            };
+        });
+
+        await Team.insertMany(teamMembersWithWorkingDays);
+        console.log('TeamMember data inserted');
 
         await mongoose.connection.close();
         console.log('MongoDB connection closed');

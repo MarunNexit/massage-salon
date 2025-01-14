@@ -9,7 +9,7 @@ import ServiceFilters from "./ServiceFilters.tsx";
 import EnrollServiceItem from "../enroll/service/enrollServiceItem.tsx";
 
 interface ServiceProps {
-    onSelect?: (id: string) => void;
+    onSelect?: (id: string, name: string) => void;
     isDrawer: boolean;
 }
 
@@ -41,7 +41,7 @@ const Services: React.FC<ServiceProps> = ({isDrawer = false, onSelect}: ServiceP
         fetchServices();
     }, []);
 
-    const sortedServices = getSortedServices({services, selectedCategory, sortOption})
+const sortedServices = getSortedServices({services, selectedCategory, sortOption})
 
     return (
         <section id="services"  className="services" style={ !isDrawer ? {marginTop: '6rem'} : {}}>

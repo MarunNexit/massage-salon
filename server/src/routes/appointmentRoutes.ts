@@ -1,14 +1,13 @@
-/*
 import express from 'express';
-import { uploadImage, getGallery, deleteImage } from '../controllers/galleryController';
+import {
+    createAppointment,
+    getAvailableHoursSpecificDay
+} from "../controllers/appointmentController";
 
 const router = express.Router();
 
-router.post('/', uploadImage);
+router.post('/', createAppointment);
 
-router.get('/', getGallery);
-
-router.delete('/:id', deleteImage);
+router.get('/hours', getAvailableHoursSpecificDay);
 
 export default router;
-*/

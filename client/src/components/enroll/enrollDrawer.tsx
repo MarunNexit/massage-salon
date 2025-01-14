@@ -1,44 +1,102 @@
-import React, { useState } from 'react';
-import {Drawer, Button, Stack, Group, Text, TextInput, Container} from '@mantine/core';
-import {DatePicker, TimeInput} from '@mantine/dates';
+import React, {useEffect, useState} from 'react';
+import {Drawer, Button, Stack} from '@mantine/core';
 import Services from "../services/Services.tsx";
 import EnrollTeam from "./team/enrollTeam.tsx";
 import {IconArrowLeft} from "@tabler/icons-react";
 import '@mantine/dates/styles.css';
+import EnrollOptions from "./enrollOptions.tsx";
+import EnrollForm from "./enrollForm.tsx";
+import {createAppointment, getAvailableMasterHours} from "../../api/appointment.ts";
+import {AppointmentCreateData} from "../../models/appointment.ts";
 
 interface EnrollDrawerProps {
     opened: boolean;
     onClose: () => void;
-    onSubmit?: (data: { service: string; master: string; date: Date | null }) => void;
+    onSubmit?: () => void;
+    selectedService: any;
 }
 
-const EnrollDrawer: React.FC<EnrollDrawerProps> = ({ opened, onClose, onSubmit }) => {
-    const [isOnline, setIsOnline] = useState(false);
-    const [serviceId, setServiceId] = useState<string | null>(null);
+const EnrollDrawer: React.FC<EnrollDrawerProps> = ({ opened, onClose, onSubmit, selectedService = null}) => {
+    const [isOnline, setIsOnline] = useState(!!(selectedService && selectedService._id && selectedService.name));
+    const [serviceId, setServiceId] = useState<string | null>(selectedService && selectedService._id && selectedService.name ? selectedService._id : null);
+    const [serviceName, setServiceName] = useState<string | null>(selectedService && selectedService._id && selectedService.name ? selectedService.name : null);
     const [masterId, setMasterId] = useState<string | null>(null);
-    const [date, setDate] = useState<Date | null>(null);
-    const [time, setTime] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
+    const [masterName, setMasterName] = useState<string | null>(null);
     const [availableTimes, setAvailableTimes] = useState([]);
 
-    const handleEnroll = () => {
-        /*if (serviceId && master && date && onSubmit) {
-            onSubmit({ serviceId, master, date });
+    const [formData, setFormData] = useState({
+        email: '',
+        phone: '',
+        date: null,
+        time: ''
+    });
+
+    useEffect(() => {
+        const fetchAvailableTimes = async () => {
+            try {
+                const availableTimes = await getAvailableMasterHours(masterId, formData.date);
+                if(availableTimes && availableTimes.availableSlots != null){
+                    setAvailableTimes(availableTimes.availableSlots);
+                }
+                else {
+                    setAvailableTimes([]);
+                }
+            } catch (error) {
+                console.error('Error fetching available times:', error);
+            }
+        };
+
+        if(masterId && formData.date != null){
+            fetchAvailableTimes();
         }
-        setServiceId(null);
-        setMaster(null);
-        setDate(null);
-        setIsOnline(false)*/
+    }, [formData.date, masterId]);
+
+    const handleFormChange = (field: string, value: any) => {
+        setFormData((prev) => ({ ...prev, [field]: value }));
+    };
+
+    const handleEnroll = () => {
         handleOnClose();
     };
 
     const handleOnClose = () => {
-        setIsOnline(false)
-        setServiceId(null);
+        if(!(selectedService && selectedService._id && selectedService.name)){
+            setIsOnline(false)
+            setServiceId(null);
+            setServiceName(null);
+        }
         setMasterId(null);
-        setDate(null);
+        setMasterName(null);
+        setFormData(
+            {
+                email: '',
+                phone: '',
+                date: null,
+                time: ''
+            }
+        );
+        console.log(selectedService)
         onClose();
+    };
+
+    const onSubmitForm = () => {
+        if(serviceId && masterId && formData && onSubmit){
+            const handleSubmit = async (data: AppointmentCreateData) => {
+                const response = await createAppointment(data)
+                if(response){
+                    onSubmit()
+                }
+            };
+
+            handleSubmit({
+                email: formData.email,
+                phone: formData.phone,
+                serviceId: serviceId,
+                masterId: masterId,
+                date: formData.date,
+                time: formData.time,
+            });
+        }
     };
 
     const copyPhoneNumber = () => {
@@ -46,14 +104,16 @@ const EnrollDrawer: React.FC<EnrollDrawerProps> = ({ opened, onClose, onSubmit }
         alert('Номер скопійовано!');
     };
 
-    const onSelectService = (_id: string) => {
+    const onSelectService = (_id: string, name: string) => {
         console.log(_id);
         setServiceId(_id);
+        setServiceName(name)
     };
 
-    const onSelectTeamMember = (_id: string) => {
+    const onSelectTeamMember = (_id: string, name: string) => {
         console.log(_id);
         setMasterId(_id);
+        setMasterName(name);
     };
 
     const onEnrollOnline = () => {
@@ -63,9 +123,17 @@ const EnrollDrawer: React.FC<EnrollDrawerProps> = ({ opened, onClose, onSubmit }
     const onReturnBack = () => {
         if(masterId){
             setMasterId(null);
+            setMasterName(null)
+            setAvailableTimes([]);
         }
         else if(serviceId) {
-            setServiceId(null);
+            if(!(selectedService && selectedService._id && selectedService.name)){
+                setServiceId(null);
+                setServiceName(null)
+            }
+            else {
+                handleOnClose();
+            }
         }
         else if(isOnline) {
             setIsOnline(false);
@@ -94,36 +162,7 @@ const EnrollDrawer: React.FC<EnrollDrawerProps> = ({ opened, onClose, onSubmit }
             </Drawer.Header>
 
             {!isOnline ? (
-                <section style={{padding:'10px 20px'}}>
-                    <Stack style={{ margin: '0 0 4rem 0 '}}>
-                        <Text size='sm' style={{ margin: '1rem 0'}}>Зателефонуйте нам</Text>
-                        <Group style={{display: 'flex', justifyContent: 'center'}}>
-                            <Button
-                                component="a"
-                                href="tel:+380XXXXXXXXX"
-                                variant="light"
-                                color="blue"
-                            >
-                                Зателефонувати
-                            </Button>
-                            <Button onClick={copyPhoneNumber} variant="light" color="gray">
-                                Скопіювати номер телефону
-                            </Button>
-                        </Group>
-                    </Stack>
-
-                    <Stack>
-                        <Text size='sm' >Запишіться онлайн</Text>
-                        <Group style={{display: 'flex', justifyContent: 'center', margin: '1rem 1rem'}}>
-                            <Button
-                                variant="light"
-                                onClick={() => {onEnrollOnline()}}
-                            >
-                                Записатися онлайн
-                            </Button>
-                        </Group>
-                    </Stack>
-                </section>
+                <EnrollOptions onEnrollOnline={onEnrollOnline} copyPhoneNumber={copyPhoneNumber}></EnrollOptions>
             ) : (
                 <Stack>
                     {isOnline && !serviceId &&
@@ -131,62 +170,11 @@ const EnrollDrawer: React.FC<EnrollDrawerProps> = ({ opened, onClose, onSubmit }
                     }
 
                     {isOnline && serviceId && !masterId &&(
-                        <EnrollTeam onSelect={onSelectTeamMember} service_id={serviceId}></EnrollTeam>
+                        <EnrollTeam onSelect={onSelectTeamMember} service_id={serviceId} service_name={serviceName}></EnrollTeam>
                     )}
 
-                    {isOnline && serviceId && masterId && (
-                        <section style={{}}>
-                            <TextInput
-                                label="Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Ваш email"
-                                style={{ marginTop: '1rem', width: '100%' }}
-                            />
-                            <TextInput
-                                label="Телефон"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                placeholder="Ваш номер телефону"
-                                style={{ marginTop: '1rem', width: '100%' }}
-                            />
-
-                            <section style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
-                                <DatePicker
-                                    value={date}
-                                    onChange={setDate}
-                                    minDate={new Date()}
-                                />
-                            </section>
-
-                            {date && (
-                                <Button onClick={handleEnroll} color="green" disabled={!date || !masterId || !serviceId} style={{width:'50%', alignSelf: 'center', margin: '1rem'}}>
-                                    Записатися
-                                </Button>
-                            )}
-
-                            {date && (
-                                <section style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '1rem' }}>
-                                    <TimeInput
-                                        value={time}
-                                        onChange={setTime}
-                                        placeholder="Виберіть час"
-                                        data={availableTimes.map((time) => ({ value: time, label: time }))}
-                                    />
-                                </section>
-                            )}
-
-                            {date && time && email && phone && (
-                                <Button
-                                    onClick={handleEnroll}
-                                    color="green"
-                                    disabled={!date || !time || !masterId || !serviceId}
-                                    style={{ width: '50%', alignSelf: 'center', margin: '1rem' }}
-                                >
-                                    Записатися
-                                </Button>
-                            )}
-                        </section>
+                    {isOnline && serviceId && serviceName && masterId && masterName && (
+                        <EnrollForm availableTimes={availableTimes} handleEnroll={handleEnroll} onSubmitForm={onSubmitForm} formData={formData} onChange={handleFormChange} serviceName={serviceName} masterName={masterName} />
                     )}
                 </Stack>
             )}

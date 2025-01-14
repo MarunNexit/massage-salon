@@ -6,7 +6,7 @@ import './enrollTeamItem.css';
 
 
 interface EnrollTeamItemProps {
-    onSelect: (id: string) => void;
+    onSelect: (id: string, name: string) => void;
     teamMember: ITeamMember;
 }
 
@@ -27,7 +27,7 @@ const EnrollTeamItem: React.FC<EnrollTeamItemProps> = ({teamMember, onSelect }:E
                 backgroundColor: theme.colors.background[1],
             }}
             onClick={() => {
-                onSelect(teamMember._id)
+                onSelect(teamMember._id, teamMember.name)
             }}
         >
             <section style={{display: 'flex', alignItems: 'center'}}>

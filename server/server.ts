@@ -1,5 +1,4 @@
 import express, { Application, Request, Response } from "express";
-import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import salonRoutes from "./src/routes/salonRoutes";
@@ -10,6 +9,7 @@ import workingHoursRoutes from "./src/routes/workingHoursRoutes";
 import connectDB from "./src/config/db";
 import teamMemberRoutes from "./src/routes/teamMemberRoutes";
 import socialLinkRoutes from "./src/routes/socialLinkRoutes";
+import appointmentRoutes from "./src/routes/appointmentRoutes";
 
 
 dotenv.config();
@@ -32,6 +32,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/working-hours", workingHoursRoutes);
 app.use("/api/team-members", teamMemberRoutes);
 app.use("/api/social-links", socialLinkRoutes);
+app.use("/api/appointments", appointmentRoutes);
 
 app.listen(port, () => {
     console.log(`🚀 Сервер працює за адресою 👉 http://localhost:${port}`);

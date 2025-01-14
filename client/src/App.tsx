@@ -1,23 +1,18 @@
 import './App.css'
-import HeaderAppMain from "./components/header/HeaderAppMain.tsx";
-import AboutUs from "./components/aboutus/AboutUs.tsx";
-import Gallery from "./components/gallery/Gallery.tsx";
-import Services from "./components/services/Services.tsx";
-import Team from "./components/team/Team.tsx";
-import Reviews from "./components/reviews/Reviews.tsx";
-import Location from "./components/location/Location.tsx";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import UserApp from "./UserApp.tsx";
+import AdminApp from "./AdminApp.tsx";
 
 function App() {
 
   return (
       <div className="App">
-          <HeaderAppMain/>
-          <AboutUs/>
-          <Gallery/>
-          <Services/>
-          <Team/>
-          <Reviews/>
-          <Location/>
+          <BrowserRouter>
+              <Routes>
+                  <Route path="/" element={<UserApp />} />
+                  <Route path="/admin" element={<AdminApp />} />
+              </Routes>
+          </BrowserRouter>
       </div>
   )
 }

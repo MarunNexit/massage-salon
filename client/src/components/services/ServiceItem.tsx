@@ -1,9 +1,11 @@
-import { Button, Card, Grid, Group, Text, useMantineTheme } from "@mantine/core";
+import { Card, Grid, Group, Text, useMantineTheme } from "@mantine/core";
 import React from "react";
 import './serviceItem.css';
 import {IconArrowRight} from "@tabler/icons-react";
+import EnrollButton from "../enroll/enrollButton.tsx";
 
 interface ServiceItemProps {
+    _id: string;
     name: string;
     duration: number;
     price: number;
@@ -11,7 +13,7 @@ interface ServiceItemProps {
     isDrawer: boolean;
 }
 
-const ServiceItem: React.FC<ServiceItemProps> = ({ name, duration, price, description, isDrawer = false }) => {
+const ServiceItem: React.FC<ServiceItemProps> = ({ _id, name, duration, price, description, isDrawer = false }) => {
     const theme = useMantineTheme();
 
     return (
@@ -38,14 +40,12 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ name, duration, price, descri
                 </Grid.Col>
                 <Grid.Col
                     span={isDrawer ? 1 : 3}
-                    style={{ display: 'flex', alignItems: isDrawer ? 'center' : 'start', justifyContent: 'flex-end' }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
                 >
                     {isDrawer ? (
                         <IconArrowRight size={24} stroke={2} color="blue" style={{ cursor: 'pointer' }} />
                     ) : (
-                        <Button variant="filled" style={{ margin: '20px' }} size="md">
-                            Записатися
-                        </Button>
+                        <EnrollButton outline={false} full={false} service={{_id, name}}></EnrollButton>
                     )}
                 </Grid.Col>
             </Grid>

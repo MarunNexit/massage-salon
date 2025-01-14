@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.post('/', createSalon);
 
+router.put('/', updateSalon);
+
 router.get('/', getSalon);
 
 router.get('/modified', getSalonModified);
-
-router.put('/:id', updateSalon);
 
 export default router;
