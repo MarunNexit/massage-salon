@@ -7,19 +7,22 @@ import Team from "./components/team/Team.tsx";
 import Reviews from "./components/reviews/Reviews.tsx";
 import Location from "./components/location/Location.tsx";
 import Header from "./components/header/Header.tsx";
+import {ErrorBoundary} from "./ErrorBoundary.tsx";
 
 function UserApp() {
 
     return (
         <div>
-            <Header isAdmin={false}></Header>
-            <HeaderAppMain/>
-            <AboutUs/>
-            <Gallery/>
-            <Services isDrawer={false}/>
-            <Team/>
-            <Reviews/>
-            <Location/>
+            <ErrorBoundary>
+                <Header isAdmin={false}></Header>
+                <HeaderAppMain/>
+                <AboutUs/>
+                <Gallery/>
+                <Services isDrawer={false}/>
+                <Team/>
+                <Reviews/>
+                <Location/>
+            </ErrorBoundary>
         </div>
     )
 }

@@ -23,7 +23,7 @@ const Header: React.FC<any> = ({isAdmin = false, setActiveTab}) => {
     const isMobile = useMediaQuery('(max-width: 768px)');
     const theme = useMantineTheme();
     const { colorScheme, setColorScheme } = useMantineColorScheme();
-    const { salonData} = useSalonContext();
+    const { salonData } = useSalonContext();
 
     useEffect(() => {
         if (scroll.y > 200) {
@@ -53,7 +53,7 @@ const Header: React.FC<any> = ({isAdmin = false, setActiveTab}) => {
                         width: '100%',
                     }}
                 >
-                    <Logo src={salonData.logo} />
+                    <Logo src={salonData ? salonData.logo : "https://via.placeholder.com/150"} />
 
                     {isAdmin &&
                         <div>
